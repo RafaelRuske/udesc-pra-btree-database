@@ -2,31 +2,17 @@
 #include <string.h>
 #include <malloc.h>
 #include "table.h"
+#include "btree.h"
 
-/*
-int = nr campos
-int = comprimento do nome, char[compr] nome do campo, int compriment do campo
-*/
-
-/*
-   `id` int(6) NOT NULL auto_increment,
-   `titulo` varchar(30) NOT NULL,
-    `editora` varchar(30) default NULL,
-    `anoPublicacao` int(11) default NULL,
-    `isbn` varchar(20) NOT NULL,
-     PRIMARY KEY  (`id`)
-*/
-
-
-main ( int argc, char **argv ) {
+void main ( int argc, char **argv ) {
 
     
-    int i;
+    long i;
     char found = 0;
+    char break_early = 0;
 
     char *nome_campo;
 
-    FILE *fp;
     if (argc == 3) {   //
         printf("Usage: ./insert_into <tablename> <FieldX> <ValueX>\n");
         printf("OR\n");
@@ -34,12 +20,9 @@ main ( int argc, char **argv ) {
         return;
     }
 
-    table *tmpTable; // = (table*) malloc(sizeof(table));
-    //table_field tmpField;
+    table *tmpTable;
 
-    fp = fopen(argv[1], "rb");
-    read_header(fp,&tmpTable);
-    fclose(fp);
+    read_header(argv[1],&tmpTable);
 
     if (argc == 2) {   //
         printf("[TABLE: %s; numFields: %i]\n",tmpTable->name, tmpTable->numFields);
@@ -49,10 +32,23 @@ main ( int argc, char **argv ) {
         free(tmpTable);
         return;
     }
-    
+
     table_row *row;
 
-    for (i=0;i>-1;i++) {
+    if (hasIndex(tmpTable,argv[2])) {
+        printf("[FIELD: %s IS INDEXED!]\n");
+        rdstart();
+        break_early = 1;
+        i = search(argv[3]);
+    } else {
+        i = 0;
+    }
+    
+    if (i == -1) {
+        printf("Nenhum registro encontrado!\n");
+    }
+
+    for (;i>-1;i++) {
         row = get_row(tmpTable,i);
         if (row == NULL) {
             if (found == 0) {
@@ -65,11 +61,12 @@ main ( int argc, char **argv ) {
             for (i=0;i<tmpTable->numFields;i++) {
                 printf("[%s] = %s\n",(tmpTable->fields[i]).name, get_row_field(tmpTable,row,(tmpTable->fields[i]).name));
             }
+            free(row);    
+            break;
         }
         free(row);
     }
-    
-
+    fclose(fptree);
     free(tmpTable);
 
     return;
