@@ -33,7 +33,7 @@ void main ( int argc, char **argv ) {
     table_row *row;
 
     if (hasIndex(tmpTable,argv[2])) {
-        printf("[FIELD: %s IS ALREADY INDEXED!]\n");
+        printf("[FIELD: %s IS ALREADY INDEXED!]\n",argv[2]);
         rdstart();
         printtree(root);
         fclose(fptree);

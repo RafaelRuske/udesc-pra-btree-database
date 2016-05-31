@@ -2,9 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include <io.h>
 #include <fcntl.h>
-#include <sys\stat.h>
+#include <sys/stat.h>
 #include "btree.h"
 
 node rootnode;
@@ -121,7 +120,7 @@ void found(long t,  int i)
 {
 node nod;
 
-	printf("Found in position %d of node with contents:  ", i);
+	printf("Found in position %i of node with contents:  ", i);
 	readnode(t, &nod);
 	for (i=0; i < nod.cnt; i++)
 		printf("  %s", nod.tuple[i].index);
@@ -134,7 +133,7 @@ node nod;
 
 void notfound(int x)
 {
-	printf("Item %ld not found\n", x);
+	printf("Item %i not found\n", x);
 }
 
 
@@ -278,7 +277,7 @@ btuple_t xnew;
 status code = ins(x, root, &xnew, &tnew);
 
   if (code == DUPLICATEKEY)
-	 printf("Duplicate uid %d ignored \n", x);
+	 printf("Duplicate uid %s ignored \n", x.index);
   else
 	 if (code == INSERTNOTCOMPLETE){
 		u = getnode();

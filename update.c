@@ -35,7 +35,7 @@ void main ( int argc, char **argv ) {
     table_row *row;
 
     if (hasIndex(tmpTable,argv[2])) {
-        printf("[FIELD: %s IS INDEXED!]\n");
+        printf("[FIELD: %s IS INDEXED!]\n",argv[2]);
         rdstart();
         i = search(argv[3]);
         fclose(fptree);

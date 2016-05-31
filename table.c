@@ -122,7 +122,10 @@ int set_row_field(table *table, table_row *Row, char *field_name, char *value) {
 
 char *get_row_field(table *table, table_row *Row, char *field_name) {
     table_field *tmpField = get_field(table,field_name);
-    return &((*Row).data[tmpField->startIndex]);
+    if (tmpField != NULL) {
+        return &((*Row).data[tmpField->startIndex]);
+    }
+    return NULL;
 }
 
 int save_row(table *Table, table_row *Row) {
